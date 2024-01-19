@@ -7,6 +7,7 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { RiSettingsLine } from "react-icons/ri";
 import { usePathname, useRouter } from "next/navigation";
+import { BiLogOut } from "react-icons/bi";
 
 const Index = () => {
   const router = useRouter();
@@ -48,20 +49,23 @@ const Index = () => {
   };
   return (
     <div className="w-[96px] fixed left-0 top-0 bg-white h-screen border-r border-r-gray flex justify-center">
-      <ul className="flex flex-col gap-6 mt-[50px]">
+      <ul className="flex flex-col gap-6 mt-[50px] relative">
         {sideItems.map((item, index) => {
           return (
             <li
               key={item.id}
               onClick={() => handleNavigation(item, index)}
               className={`text-xl text-lightDark w-[40px] h-[40px] cursor-pointer flex justify-center items-center rounded-full hover:bg-primary hover:bg-opacity-30 hover:text-primary  transition ${
-                pathname === "/dashboard"+item.path ? "bg-primary bg-opacity-10" : ""
+                pathname.split("/")[2] === item.path.split("/")[1] ? "bg-primary bg-opacity-10" : ""
               }`}
             >
-              <span>{ pathname === "/dashboard"+item.path ? <item.activeIcon className="text-primary"/> : <item.icon className=""/>}</span>
+              <span>{ pathname.split("/")[2] === item.path.split("/")[1] ? <item.activeIcon className="text-primary"/> : <item.icon className=""/>}</span>
             </li>
           );
         })}
+        <li className={`text-xl text-lightDark w-[40px] h-[40px] cursor-pointer flex justify-center items-center rounded-full hover:bg-primary hover:bg-opacity-30 hover:text-primary  transition
+          absolute bottom-[50px] active:scale-[.98]
+        `}><BiLogOut /></li>
       </ul>
     </div>
   );
