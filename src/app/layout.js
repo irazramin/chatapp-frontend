@@ -2,7 +2,6 @@ import {Inter, Montserrat} from 'next/font/google'
 import './globals.css'
 import Head from "next/head";
 import {Toaster} from "react-hot-toast";
-
 // const inter = Inter({subsets: ['latin']})
 const montserrat = Montserrat({subsets: ['latin']})
 
@@ -21,7 +20,6 @@ export default function RootLayout({children}) {
         </Head>
         <body suppressHydrationWarning={true} className={montserrat.className}>
         <>
-
             {children}
             <Toaster
                 toastOptions={{

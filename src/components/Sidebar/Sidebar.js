@@ -45,7 +45,7 @@ const Sidebar = ({showSidebar}) => {
 
             <div className=" absolute left-0 bottom-0 w-full p-6">
                 <button
-                    className="w-full border border-red-500 text-red-500 rounded-[56px] p-3 font-medium hover:bg-gray transition-all text-xs  flex items-center justify-center gap-2">
+                    className="w-full border border-red-500 text-red-500 rounded-[56px] p-3 font-medium hover:bg-gray transition-all text-xs  flex items-center justify-center gap-2 active:scale-[.98]">
                     <MdBlock/> Block name
                 </button>
             </div>
