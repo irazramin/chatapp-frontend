@@ -16,7 +16,7 @@ const Sidebar = ({showSidebar}) => {
     }
     return (
         <div
-            className={`${showSidebar ? 'mr-0' : '-mr-[320px]'} bg-white w-[320px] h-full transition-all duration-300 ease-in-out p-6 relative`}>
+            className={`${showSidebar ? 'mr-0' : '-mr-[320px]'} hidden md:block bg-white w-[320px] h-full transition-all duration-300 ease-in-out p-6 relative`}>
 
             <div
                 className="w-[38px] h-[38px] flex justify-center items-center border border-light2 ml-auto rounded-full">

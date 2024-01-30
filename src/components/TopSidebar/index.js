@@ -48,7 +48,7 @@ const Index = () => {
     router.push(`/dashboard/${nav.path}`);
   };
   return (
-    <div className="w-[96px] fixed left-0 top-0 bg-white h-screen border-r border-r-gray flex justify-center">
+    <div className="hidden w-[96px] fixed left-0 top-0 bg-white h-screen border-r border-r-gray md:flex justify-center">
       <ul className="flex flex-col gap-6 mt-[50px] relative">
         {sideItems.map((item, index) => {
           return (

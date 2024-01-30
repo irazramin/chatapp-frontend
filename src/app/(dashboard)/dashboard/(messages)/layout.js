@@ -1,13 +1,22 @@
+"use client";
+import { MyContext } from "@/Context/MyContext";
 import Conversation from "@/components/Conversation/Conversation";
+import React, { useState } from "react";
 
-
-export default function RootLayout({children}) {
-    return (
-        <div className="bg-gray h-screen flex relative">
-            <Conversation/>
-            <div className="flex-1 ml-[320px] w-[100vh-320px] h-screen">
-                {children}
-            </div>
+export default function RootLayout({ children }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <MyContext.Provider value={{ isOpen, setIsOpen }}>
+      <div className="bg-gray h-screen md:flex block relative overflow-hidden">
+        <Conversation isOpen={isOpen} setIsOpen={setIsOpen} />
+        <div
+          className={`md:flex-1 md:ml-[320px] md:w-[100vh-320px] h-screen md:block ${
+            isOpen ? "block" : "hidden"
+          }`}
+        >
+          {React.cloneElement(children, { isOpen, setIsOpen })}
         </div>
-    )
+      </div>
+    </MyContext.Provider>
+  );
 }

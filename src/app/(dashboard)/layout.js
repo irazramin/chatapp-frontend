@@ -4,7 +4,7 @@ export default function RootLayout({children}) {
         <div className="bg-gray h-screen flex relative ">
             <div className="w-screen h-screen">
                 <TopSidebar />
-               <div className="ml-[96px]">
+               <div className="md:ml-[96px]">
                     {children}
                </div>
             </div>
