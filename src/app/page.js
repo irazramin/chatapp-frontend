@@ -9,24 +9,26 @@ import { GrLinkedinOption } from "react-icons/gr";
 import { PiUsersDuotone } from "react-icons/pi";
 import { AiTwotoneMail } from "react-icons/ai";
 import { AiTwotoneLock } from "react-icons/ai";
-import Registration from "src/components/Registration";
-import Login from "src/components/Login";
+// import Registration from "src/components/Registration";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [slide, setSlide] = useState("");
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    setSlide("Login");
-    setLoading(false);
+    // setSlide("Login");
+    // setLoading(false);
+    router.push("/login");
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>; // Replace this with your loading component or spinner
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>; // Replace this with your loading component or spinner
+  // }
   return (
     <main className="bg-background flex items-center justify-center w-full h-screen">
-      <section className="bg-white w-[70%] h-[80%] flex relative">
+      {/* <section className="bg-white w-[70%] h-[80%] flex relative">
         <div
           className={`${
             slide === "Login" ? "sec-1-move" : "sec-1-forward"
@@ -44,8 +46,8 @@ export default function Home() {
                   type="button"
                   className="py-[14px] bg-transparent border-2 text-white rounded-[25px] hover:bg-amber-50 hover:bg-opacity-40 active:scale-95 transition-all duration-300 absolute top-[50%] left-[50%] -translate-x-[50%] min-h-[40px] min-w-[158px] uppercase text-xs font-semibold"
                   onClick={(e) => {
-                    e.preventDefault()
-                    setSlide("Login")
+                    e.preventDefault();
+                    setSlide("Login");
                   }}
                 >
                   Sign in
@@ -65,8 +67,8 @@ export default function Home() {
                   type="button"
                   className="py-[14px] bg-transparent border-2 text-white rounded-[25px] hover:bg-amber-50 hover:bg-opacity-40 active:scale-95 transition-all duration-300 absolute top-[50%] left-[50%] -translate-x-[50%] min-h-[40px] min-w-[158px] uppercase text-xs font-semibold"
                   onClick={(e) => {
-                    e.preventDefault()
-                    setSlide("registration")
+                    e.preventDefault();
+                    setSlide("registration");
                   }}
                 >
                   Sign up
@@ -95,7 +97,7 @@ export default function Home() {
             <Login />
           </div>
         )}
-      </section>
+      </section> */}
     </main>
   );
 }

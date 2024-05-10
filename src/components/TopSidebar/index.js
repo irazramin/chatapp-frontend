@@ -8,6 +8,7 @@ import { HiOutlineUserGroup } from "react-icons/hi";
 import { RiSettingsLine } from "react-icons/ri";
 import { usePathname, useRouter } from "next/navigation";
 import { BiLogOut } from "react-icons/bi";
+import Cookies from "js-cookie";
 
 const Index = () => {
   const router = useRouter();
@@ -56,16 +57,33 @@ const Index = () => {
               key={item.id}
               onClick={() => handleNavigation(item, index)}
               className={`text-xl text-lightDark w-[40px] h-[40px] cursor-pointer flex justify-center items-center rounded-full hover:bg-primary hover:bg-opacity-30 hover:text-primary  transition ${
-                pathname.split("/")[2] === item.path.split("/")[1] ? "bg-primary bg-opacity-10" : ""
+                pathname.split("/")[2] === item.path.split("/")[1]
+                  ? "bg-primary bg-opacity-10"
+                  : ""
               }`}
             >
-              <span>{ pathname.split("/")[2] === item.path.split("/")[1] ? <item.activeIcon className="text-primary"/> : <item.icon className=""/>}</span>
+              <span>
+                {pathname.split("/")[2] === item.path.split("/")[1] ? (
+                  <item.activeIcon className="text-primary" />
+                ) : (
+                  <item.icon className="" />
+                )}
+              </span>
             </li>
           );
         })}
-        <li className={`text-xl text-lightDark w-[40px] h-[40px] cursor-pointer flex justify-center items-center rounded-full hover:bg-primary hover:bg-opacity-30 hover:text-primary  transition
+        <li
+          className={`text-xl text-lightDark w-[40px] h-[40px] cursor-pointer flex justify-center items-center rounded-full hover:bg-primary hover:bg-opacity-30 hover:text-primary  transition
           absolute bottom-[50px] active:scale-[.98]
-        `}><BiLogOut /></li>
+        `}
+          onClick={() => {
+            Cookies.remove("auth_user");
+            Cookies.remove("access_token");
+            router.refresh();
+          }}
+        >
+          <BiLogOut />
+        </li>
       </ul>
     </div>
   );
