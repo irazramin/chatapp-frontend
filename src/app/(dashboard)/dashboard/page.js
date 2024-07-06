@@ -1,11 +1,24 @@
-import React from 'react'
+"use client";
+import socket from "@/utils/socket";
+import React, { useEffect } from "react";
 
 const Page = () => {
-  return (
-    <div >
-      dashboard
-    </div>
-  )
-}
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket is connected");
+    });
 
-export default Page
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+  return <div>dashboard</div>;
+};
+
+
+
+export default Page;

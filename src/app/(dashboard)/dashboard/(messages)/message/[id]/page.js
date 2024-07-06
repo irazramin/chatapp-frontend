@@ -16,8 +16,15 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { MyContext } from "@/Context/MyContext";
 import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
+import { BACKEND_URL } from "@/utils/url";
+import { GetAuthUser } from "@/app/hook";
+import Cookies from "js-cookie";
+import socket from "@/utils/socket";
 
 const Page = ({}) => {
+  const { authUser } = GetAuthUser();
+
   const [showSidebar, setShowSidebar] = useState(true);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
@@ -26,22 +33,59 @@ const Page = ({}) => {
   const scrollRef = useRef();
   const { id } = useParams();
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
     if (messageInput !== "") {
-      setMessages((prevState) => [...prevState, messageInput]);
-      scrollRef?.current?.scrollIntoView({
-        top: 0,
-        behavior: "smooth",
-      });
-      setMessageInput("");
-      e.target.reset();
+      const response = await axios.post(
+        `${BACKEND_URL}/conversation/send-message`,
+        {
+          conversationId: id,
+          message: messageInput,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("access_token")}`,
+          },
+        }
+      );
+      if (response) {
+        setMessages((prevState) => [...prevState, response.data.data]);
+        scrollRef?.current?.scrollIntoView({
+          bottom: 0,
+          behavior: "smooth",
+        });
+        setMessageInput("");
+        e.target.reset();
+        socket.emit("send-message", response?.data?.data);
+      }
     }
   };
 
   useEffect(() => {
+    socket.on("get-message", (data) => {
+      console.log("called");
+      setMessages((prevState) => [...prevState, data]);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (authUser?._id && id) {
+      axios
+        .get(
+          `${BACKEND_URL}/conversation/messages?senderId=${authUser?._id}&conversationId=${id}`,
+          {
+            headers: { Authorization: `Bearer ${Cookies.get("access_token")}` },
+          }
+        )
+        .then((res) => {
+          setMessages(res.data.data);
+        });
+    }
+  }, [authUser._id, id]);
+
+  useEffect(() => {
     scrollRef?.current?.scrollIntoView({
-      top: 0,
+      bottom: 0,
       behavior: "smooth",
     });
   }, [scrollRef, messages]);
@@ -102,46 +146,44 @@ const Page = ({}) => {
         >
           <div className="w-full h-full overflow-y-scroll message-box my-5 ">
             {messages.map((message) => (
-              <div ref={scrollRef} key={message}>
-                <div className="md:max-w-[50%] max-w-[90%] md:mb-3 mb-1">
-                  <div className="flex gap-3 items-end">
-                    <Image
-                      className="w-[26px] h-[26px] object-cover rounded-full"
-                      src={user}
-                      alt="user"
-                    />
-                    <p className="inline-block bg-white p-4 relative rounded-t-[20px] rounded-br-[20px] text-xs font-medium leading-4">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      A ab accusantium ad adipisci aliquid, architecto aut
-                      cumque dignissimos distinctio dolorem dolores excepturi
-                      impedit in inventore nisi nobis nostrum odit quam qui quia
-                      rem repellendus sit soluta sunt tempora temporibus ullam
-                      voluptates. Aperiam explicabo ipsum
-                    </p>
+              <div ref={scrollRef} key={message?._id}>
+                {message?.senderId?._id === authUser?._id ? (
+                  <div className="max-w-[50%] items-end ml-auto flex-row-reverse mb-2">
+                    <div className="flex-row-reverse flex gap-3 items-end">
+                      <Image
+                        className="w-[26px] h-[26px] object-cover rounded-full"
+                        src={user}
+                        alt="user"
+                      />
+                      <p className="text-xs font-medium leading-4 inline-block bg-primary text-white p-4 relative rounded-t-[20px] rounded-bl-[20px]">
+                        {message?.messageInfo?.message}
+                      </p>
+                    </div>
+                    <div className="mt-1">
+                      <span className="uppercase text-lightDark font-medium text-xs ml-auto mr-10 flex gap-1 items-center justify-end">
+                        <IoCheckmarkDone /> 10:45 AM
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-1">
-                    <span className="uppercase text-lightDark font-medium text-xs ml-10">
-                      10:45 AM
-                    </span>
+                ) : (
+                  <div className="md:max-w-[50%] max-w-[90%] md:mb-3 mb-1">
+                    <div className="flex gap-3 items-end">
+                      <Image
+                        className="w-[26px] h-[26px] object-cover rounded-full"
+                        src={user}
+                        alt="user"
+                      />
+                      <p className="inline-block bg-white p-4 relative rounded-t-[20px] rounded-br-[20px] text-xs font-medium leading-4">
+                        {message?.messageInfo?.message}
+                      </p>
+                    </div>
+                    <div className="mt-1">
+                      <span className="uppercase text-lightDark font-medium text-xs ml-10">
+                        10:45 AM
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="max-w-[50%] items-end ml-auto flex-row-reverse">
-                  <div className="flex-row-reverse flex gap-3 items-end">
-                    <Image
-                      className="w-[26px] h-[26px] object-cover rounded-full"
-                      src={user}
-                      alt="user"
-                    />
-                    <p className="text-xs font-medium leading-4 inline-block bg-primary text-white p-4 relative rounded-t-[20px] rounded-bl-[20px]">
-                      {message}
-                    </p>
-                  </div>
-                  <div className="mt-1">
-                    <span className="uppercase text-lightDark font-medium text-xs ml-auto mr-10 flex gap-1 items-center justify-end">
-                      <IoCheckmarkDone /> 10:45 AM
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
             ))}
           </div>

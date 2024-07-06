@@ -1,13 +1,36 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import login from "../../../public/login.png";
 import LoginComponent from "@/components/LoginComponent";
 import AuthLayout from "@/components/AuthLayout";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 const Login = () => {
   const router = useRouter();
-  return (
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    router?.events?.on("routeChangeError", (e) => setLoading(false));
+    router?.events?.on("routeChangeStart", (e) => setLoading(false));
+    router?.events?.on("routeChangeComplete", (e) => setLoading(true));
+
+    return () => {
+      router?.events?.off("routeChangeError", (e) => setLoading(false));
+      router?.events?.off("routeChangeStart", (e) => setLoading(false));
+      router?.events?.off("routeChangeComplete", (e) => setLoading(true));
+    };
+  }, [router.events]);
+
+  const authUser = Cookies.get("auth_user");
+
+  if (authUser && !loading) {
+    router.push("/dashboard/message");
+  }
+  return loading === true ? (
+    <></>
+  ) : (
     <AuthLayout>
       <div
         className={` w-[40%] h-full flex items-center justify-center relative z-50`}

@@ -11,11 +11,15 @@ import { AiTwotoneMail } from "react-icons/ai";
 import { AiTwotoneLock } from "react-icons/ai";
 // import Registration from "src/components/Registration";
 import { useRouter } from "next/navigation";
+// import socket from "@/utils/socket";
+import io from "socket.io-client";
 
 export default function Home() {
   const [slide, setSlide] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+
 
   useEffect(() => {
     // setSlide("Login");

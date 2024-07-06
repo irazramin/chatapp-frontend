@@ -1,10 +1,16 @@
 "use client";
 import { MyContext } from "@/Context/MyContext";
 import Conversation from "@/components/Conversation/Conversation";
-import React, { useState } from "react";
+import socket from "@/utils/socket";
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 export default function RootLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+   
+  }, []);
   return (
     <MyContext.Provider value={{ isOpen, setIsOpen }}>
       <div className="bg-gray h-screen md:flex block relative overflow-hidden">

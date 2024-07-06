@@ -22,6 +22,7 @@ const LoginComponent = () => {
 
     const response = await axios.post(`${BACKEND_URL}/login`, data, {
       withCredentials: true,
+      
     });
     if (response.data.code === 200) {
       toast("Login successful");
